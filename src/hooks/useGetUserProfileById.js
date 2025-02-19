@@ -3,6 +3,8 @@ import useShowToast from "./useShowToast";
 import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 
+// useGetUserProfile
+
 const useGetUserProfileById = (userId) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [userProfile, setUserProfile] = useState(null);
