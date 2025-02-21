@@ -158,3 +158,6 @@ const Signup = ({ setIsLogin }) => { // Receive setIsLogin from parent
 };
 
 export default Signup;
+
+
+

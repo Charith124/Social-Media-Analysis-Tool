@@ -171,7 +171,24 @@
 // }
 
 
-import { Box, Button, CloseButton, Flex, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Textarea, Tooltip, useDisclosure } from "@chakra-ui/react";
+import {
+    Box,
+    Button,
+    CloseButton,
+    Flex,
+    Image,
+    Input,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Textarea,
+    Tooltip,
+    useDisclosure,
+} from "@chakra-ui/react";
 import { CreatePostLogo } from "../../assets/constants";
 import { BsFillImageFill } from "react-icons/bs";
 import { useRef, useState } from "react";
@@ -182,8 +199,7 @@ import usePostStore from "../../store/postStore";
 import useUserProfileStore from "../../store/userProfileStore";
 import { useLocation } from "react-router-dom";
 import { addDoc, arrayUnion, collection, doc, updateDoc } from "firebase/firestore";
-import { firestore, storage } from "../../firebase/firebase";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { firestore } from "../../firebase/firebase";
 
 const CreatePost = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -225,7 +241,7 @@ const CreatePost = () => {
                         {selectedFile && (
                             <Flex mt={5} w={"full"} position={"relative"} justifyContent={"center"}>
                                 <Image src={selectedFile} alt='Selected img' />
-                                <CloseButton position={"absolute"} top={2} right={2} onClick={() => { setSelectedFile(null); }} />
+                                <CloseButton position={"absolute"} top={2} right={2} onClick={() => setSelectedFile(null)} />
                             </Flex>
                         )}
                     </ModalBody>
@@ -249,33 +265,52 @@ function useCreatePost() {
     const userProfile = useUserProfileStore((state) => state.userProfile);
     const { pathname } = useLocation();
 
+    const uploadToCloudinary = async (imageBase64) => {
+        const cloudName = "dadyig6km";
+        const uploadPreset = "unsigned_upload";
+
+        const formData = new FormData();
+        formData.append("file", imageBase64);
+        formData.append("upload_preset", uploadPreset);
+        formData.append("cloud_name", cloudName);
+
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+            method: "POST",
+            body: formData,
+        });
+
+        const data = await response.json();
+        return data.secure_url;
+    };
+
     const handleCreatePost = async (selectedFile, caption) => {
         if (isLoading) return;
-        if (!caption.trim()) throw new Error("Caption cannot be empty");
+        if (!selectedFile) throw new Error("Please select an image");
         setIsLoading(true);
-        const newPost = {
-            caption: caption,
-            likes: [],
-            comments: [],
-            createdAt: Date.now(),
-            createdBy: authUser.uid,
-        };
 
         try {
+            // Upload image to Cloudinary
+            const imageUrl = await uploadToCloudinary(selectedFile);
+            
+            // Create post object
+            const newPost = {
+                caption: caption,
+                likes: [],
+                comments: [],
+                createdAt: Date.now(),
+                createdBy: authUser.uid,
+                imageURL: imageUrl, // Store Cloudinary URL in Firestore
+            };
+
+            // Save post in Firestore
             const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
             const userDocRef = doc(firestore, "users", authUser.uid);
-            await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
 
-            if (selectedFile) {
-                const imageRef = ref(storage, `posts/${postDocRef.id}`);
-                await uploadString(imageRef, selectedFile, "data_url");
-                const downloadURL = await getDownloadURL(imageRef);
-                await updateDoc(postDocRef, { imageURL: downloadURL });
-                newPost.imageURL = downloadURL;
-            }
+            await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
 
             if (userProfile.uid === authUser.uid) createPost({ ...newPost, id: postDocRef.id });
             if (pathname !== "/" && userProfile.uid === authUser.uid) addPost({ ...newPost, id: postDocRef.id });
+
             showToast("Success", "Post created successfully", "success");
         } catch (error) {
             showToast("Error", error.message, "error");
@@ -286,5 +321,3 @@ function useCreatePost() {
 
     return { isLoading, handleCreatePost };
 }
-
-
