@@ -18,9 +18,9 @@ const AuthForm = () => {
                     {isForgotPassword ? (
                         <ForgotPassword onBack={() => setIsForgotPassword(false)} />
                     ) : isLogin ? (
-                        <Login />
+                        <Login setIsLogin={setIsLogin} /> 
                     ) : (
-                        <Signup />
+                        <Signup setIsLogin={setIsLogin} /> 
                     )}
 
                     {/* ---------------- OR -------------- */}
@@ -28,9 +28,7 @@ const AuthForm = () => {
                         <>
                             <Flex alignItems={"center"} justifyContent={"center"} my={4} gap={1} w={"full"}>
                                 <Box flex={2} h={"1px"} bg={"gray.400"} />
-                                <Text mx={1} color={"white"}>
-                                    OR
-                                </Text>
+                                <Text mx={1} color={"white"}>OR</Text>
                                 <Box flex={2} h={"1px"} bg={"gray.400"} />
                             </Flex>
 
