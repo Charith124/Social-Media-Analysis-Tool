@@ -126,7 +126,6 @@
 
 // export default useSignUpWithEmailAndPassword;
 
-
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth, firestore } from "../firebase/firebase";
 import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
@@ -143,6 +142,7 @@ const useSignUpWithEmailAndPassword = () => {
             return;
         }
 
+        // ✅ Check if username already exists
         const usersRef = collection(firestore, "users");
         const q = query(usersRef, where("username", "==", inputs.username));
         const querySnapshot = await getDocs(q);
@@ -153,18 +153,18 @@ const useSignUpWithEmailAndPassword = () => {
         }
 
         try {
+            // ✅ Create the user (Firebase auto logs in user at this step)
             const newUser = await createUserWithEmailAndPassword(inputs.email, inputs.password);
-
             if (!newUser?.user) {
                 showToast("Error", error?.message || "Signup failed", "error");
                 return;
             }
 
-            // Send email verification
+            // ✅ Send email verification
             await sendEmailVerification(newUser.user);
             showToast("Success", "Verification email sent. Please check your inbox.", "success");
 
-            // Create user document in Firestore
+            // ✅ Store user data in Firestore
             const userDoc = {
                 uid: newUser.user.uid,
                 email: inputs.email,
@@ -176,18 +176,17 @@ const useSignUpWithEmailAndPassword = () => {
                 following: [],
                 posts: [],
                 createdAt: Date.now(),
-                emailVerified: false,
+                emailVerified: false, // 🚀 New field to track verification
             };
 
             await setDoc(doc(firestore, "users", newUser.user.uid), userDoc);
 
-            // 🚀 Forcefully sign out the user immediately to prevent UI flicker
+            // 🚀 Forcefully log out user IMMEDIATELY
             await signOut(auth);
 
-            // 🔄 Wait for Firebase Auth to update before switching to login form
-            setTimeout(() => {
-                setIsLogin(true); // Switch to login form
-            }, 100); // Small delay ensures UI updates properly
+            // ✅ Prevent user from logging in until email is verified
+            setIsLogin(true); // Switch to login page
+            showToast("Info", "Please verify your email before logging in.", "info");
 
         } catch (error) {
             showToast("Error", error.message, "error");

@@ -77,14 +77,13 @@
 // };
 
 // export default Signup;
-
-
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Alert, AlertIcon, Button, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import useSignUpWithEmailAndPassword from "../../hooks/useSignUpWithEmailAndPassword";
 
-const Signup = ({ setIsLogin }) => { // Receive setIsLogin from parent
+const Signup = () => {
     const [inputs, setInputs] = useState({
         fullName: "",
         username: "",
@@ -92,7 +91,16 @@ const Signup = ({ setIsLogin }) => { // Receive setIsLogin from parent
         password: "",
     });
     const [showPassword, setShowPassword] = useState(false);
-    const { loading, error, signup } = useSignUpWithEmailAndPassword();
+    const { signup } = useSignUpWithEmailAndPassword();
+    const navigate = useNavigate();
+
+    const handleSignup = async () => {
+        const success = await signup(inputs);
+        if (success) {
+            alert("Verification email sent. Please check your inbox.");
+            navigate("/auth"); // ✅ Redirect to login page after successful signup
+        }
+    };
 
     return (
         <>
@@ -136,20 +144,12 @@ const Signup = ({ setIsLogin }) => { // Receive setIsLogin from parent
                 </InputRightElement>
             </InputGroup>
 
-            {error && (
-                <Alert status='error' fontSize={13} p={2} borderRadius={4}>
-                    <AlertIcon fontSize={12} />
-                    {error.message}
-                </Alert>
-            )}
-
             <Button
                 w={"full"}
                 colorScheme='blue'
                 size={"sm"}
                 fontSize={14}
-                isLoading={loading}
-                onClick={() => signup(inputs, setIsLogin)} // ✅ Pass setIsLogin here
+                onClick={handleSignup}
             >
                 Sign Up
             </Button>
