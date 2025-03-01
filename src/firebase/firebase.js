@@ -9,7 +9,7 @@ const firebaseConfig = {
 	apiKey: "AIzaSyCLyb9K1HxGZ14J_Tqe_AgKCOzIcVas5_o",
 	authDomain: "csvista-6ea44.firebaseapp.com",
 	projectId: "csvista-6ea44",
-	storageBucket: "csvista-6ea44.firebasestorage.app",
+	storageBucket: "csvista-6ea44.appspot.com",
 	messagingSenderId: "176305190759",
 	appId: "1:176305190759:web:37b7ef75eaa5311e37e1c2",
 	measurementId: "G-7SDFYYZRJ8"
