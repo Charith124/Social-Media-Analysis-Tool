@@ -13,16 +13,21 @@ import CompetitorAnalysis from "./pages/competitoranalysis/CompetitorAnalysis.js
 function App() {
   const [authUser] = useAuthState(auth);
 
+
 	return (
 		<PageLayout>
 			<Routes>
 				<Route path='/' element={authUser ? <HomePage /> : <Navigate to='/auth' />} />
 				<Route path='/auth' element={!authUser ? <AuthPage /> : <Navigate to='/' />} />
 				<Route path='/:username' element={<ProfilePage />} />
+				<Route path='/alerts' element={<AlertsPage />} />
+				<Route path='/post/:postId' element={<PostPage />} /> {/* Added this route */}
         <Route path="/competitoranalysis" element={<CompetitorAnalysis />} />
 			</Routes>
 		</PageLayout>
 	);
+
+
 }
 
 export default App;
