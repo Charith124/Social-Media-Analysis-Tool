@@ -6,7 +6,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 const AlertsPage = () => {
     const [alerts, setAlerts] = useState([]);
-    const userName = "Ravi12"; // 🔹 Replace with actual logged-in user name
+    const userName = JSON.parse( localStorage.getItem("user-info")).username; // 🔹 Replace with actual logged-in user name
     const [uid, setuid] = useState("");
     
 
