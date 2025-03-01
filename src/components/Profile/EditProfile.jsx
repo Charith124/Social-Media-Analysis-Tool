@@ -15,7 +15,7 @@ import {
 	ModalOverlay,
 	Stack,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import useAuthStore from "../../store/authStore";
 import usePreviewImg from "../../hooks/usePreviewImg";
 import useEditProfile from "../../hooks/useEditProfile";
@@ -33,11 +33,19 @@ const EditProfile = ({ isOpen, onClose }) => {
 	const { isUpdating, editProfile } = useEditProfile();
 	const showToast = useShowToast();
 
+	// ✅ Show an alert when user is logged in
+	useEffect(() => {
+		if (authUser) {
+			showToast("Welcome!", `Logged in as ${authUser.username}`, "success");
+		}
+	}, [authUser]);
+
 	const handleEditProfile = async () => {
 		try {
 			await editProfile(inputs, selectedFile);
 			setSelectedFile(null);
 			onClose();
+			showToast("Success", "Profile updated successfully!", "success");
 		} catch (error) {
 			showToast("Error", error.message, "error");
 		}
@@ -51,7 +59,6 @@ const EditProfile = ({ isOpen, onClose }) => {
 					<ModalHeader />
 					<ModalCloseButton />
 					<ModalBody>
-						{/* Container Flex */}
 						<Flex bg={"black"}>
 							<Stack spacing={4} w={"full"} maxW={"md"} bg={"black"} p={6} my={0}>
 								<Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
@@ -141,4 +148,3 @@ const EditProfile = ({ isOpen, onClose }) => {
 };
 
 export default EditProfile;
-
