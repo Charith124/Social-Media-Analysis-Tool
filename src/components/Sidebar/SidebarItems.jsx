@@ -6,16 +6,16 @@ import Search from "./Search";
 import Alerts from "./Alerts";
 
 const SidebarItems = () => {
-	return (
-		<>
-			<Home />
-			<Search />
-			<Notifications />
-			<CreatePost />
-			<Alerts />
-			<ProfileLink />
-		</>
-	);
+  return (
+    <>
+      <Home />
+      <Search />
+      <Notifications />
+      <CreatePost />
+      <Alerts />
+      <ProfileLink />
+    </>
+  );
 };
 
 export default SidebarItems;

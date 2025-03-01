@@ -8,9 +8,11 @@ import PostPage from "./components/PostPage";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/firebase";
+import CompetitorAnalysis from "./pages/competitoranalysis/CompetitorAnalysis.jsx"; // Default import
 
 function App() {
-	const [authUser] = useAuthState(auth);
+  const [authUser] = useAuthState(auth);
+
 
 	return (
 		<PageLayout>
@@ -20,9 +22,12 @@ function App() {
 				<Route path='/:username' element={<ProfilePage />} />
 				<Route path='/alerts' element={<AlertsPage />} />
 				<Route path='/post/:postId' element={<PostPage />} /> {/* Added this route */}
+        <Route path="/competitoranalysis" element={<CompetitorAnalysis />} />
 			</Routes>
 		</PageLayout>
 	);
+
+
 }
 
 export default App;
