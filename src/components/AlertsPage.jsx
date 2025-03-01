@@ -6,18 +6,9 @@ import { Link as RouterLink } from "react-router-dom";
 
 const AlertsPage = () => {
     const [alerts, setAlerts] = useState([]);
-    const userName = "vivek"; // 🔹 Replace with actual logged-in user name
+    const userName = "Ravi12"; // 🔹 Replace with actual logged-in user name
     const [uid, setuid] = useState("");
-    useEffect( ()=>{
-        const a=async ()=>{
-            const userRecord =await  getDocs(query(collection(firestore,"users"),where("username","==",userName)));
-            userRecord.forEach(doc=>{
-                setuid(doc.data().uid);
-                console.log("userrecord-> ",doc.data().uid)
-            })
-        }
-        a();
-    },[])
+    
 
     useEffect(() => {
         const fetchAlerts = async () => {
@@ -25,7 +16,7 @@ const AlertsPage = () => {
                 console.log("Fetching alerts for user:", userName);
                 
                 const postsRef = collection(firestore, "posts");
-                const qu = query(postsRef, where("createdBy", "==", uid));
+                const qu = query(postsRef, where("createdBy", "==", JSON.parse( localStorage.getItem("user-info")).uid));
                 const querySnapshot = await getDocs(qu);
                 // const querySnapshot = await getDocs(postsRef);
 
