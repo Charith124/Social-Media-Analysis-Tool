@@ -14,15 +14,18 @@ const Signup = ({ setIsLogin }) => {
     const [showPassword, setShowPassword] = useState(false);
     const { signup } = useSignUpWithEmailAndPassword();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleSignup = async () => {
+        setLoading(true); // Start loading
         const success = await signup(inputs);
+        setLoading(false); // Stop loading
+    
         if (success) {
             alert("Verification email sent. Please check your inbox.");
-            navigate("/auth"); // ✅ Redirect to login page after successful signup
+            navigate("/auth"); 
         }
     };
-
     return (
         <>
             <Input
@@ -70,8 +73,8 @@ const Signup = ({ setIsLogin }) => {
                 colorScheme='blue'
                 size={"sm"}
                 fontSize={14}
-                isLoading={loading}
-                onClick={() => signup(inputs, () => setIsLogin(true))} 
+                isLoading={loading} // ✅ Use the new loading state
+                onClick={handleSignup} // ✅ Use handleSignup instead of calling signup directly
             >
                 Sign Up
             </Button>
