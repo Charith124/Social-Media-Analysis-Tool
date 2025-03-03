@@ -34,17 +34,18 @@ const EditProfile = ({ isOpen, onClose }) => {
 	const showToast = useShowToast();
 
 	// ✅ Show an alert when user is logged in
-	useEffect(() => {
-		if (authUser) {
-			showToast("Welcome!", `Logged in as ${authUser.username}`, "success");
-		}
-	}, [authUser]);
+	// useEffect(() => {
+	// 	if (authUser) {
+	// 		showToast("Welcome!", `Logged in as ${authUser.username}`, "success");
+	// 	}
+	// }, [authUser]);
 
 	const handleEditProfile = async () => {
 		try {
 			await editProfile(inputs, selectedFile);
 			setSelectedFile(null);
 			onClose();
+			console.log("Profile updated successfully!");
 			showToast("Success", "Profile updated successfully!", "success");
 		} catch (error) {
 			showToast("Error", error.message, "error");
