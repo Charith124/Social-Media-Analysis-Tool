@@ -40,7 +40,7 @@ const useSignUpWithEmailAndPassword = () => {
             await signOut(auth);
 
             // **🚀 Ensure instant UI switch:** Set login form **before** storing user in Firestore
-            setIsLogin(true);
+            // setIsLogin(true);
 
             // Create user document in Firestore **after** setting login state
             const userDoc = {
