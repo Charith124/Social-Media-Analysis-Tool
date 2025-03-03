@@ -9,7 +9,7 @@ import competitorAnalysisImg from '../../images/competitoranalysis.png';
 import instagramTop10Influencers from '../../images/instagram/top10_influencers.png';
 import instagramTop10Countries from '../../images/instagram/top10_countries.png';
 import instagramTop10Engagement from '../../images/instagram/top10_engagement.png';
-import instagramTop10Categories from '../../images/instagram/top10_categories.png';
+import instagramTop10Categories from '../../images/instagram/cea.png';
 import instagramTop10Audience from '../../images/instagram/top10_audience.png';
 import instagramFollowersByCategory from '../../images/instagram/followers_by_category.png';
 import instagramTop10AvgEngagement from '../../images/instagram/top10_avg_engagement.png';
