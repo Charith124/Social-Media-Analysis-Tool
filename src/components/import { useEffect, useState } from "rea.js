@@ -3,20 +3,31 @@ import { Box, Text, VStack } from "@chakra-ui/react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { Link as RouterLink } from "react-router-dom";
-import Alerts from "./Sidebar/Alerts";
-
 
 const AlertsPage = () => {
     const [alerts, setAlerts] = useState([]);
-    const userName = JSON.parse(localStorage.getItem("user-info")).username; // 🔹 Replace with actual logged-in user name
+    const userName = "vivek"; // 🔹 Replace with actual logged-in user name
+    const [uid, setuid] = useState("");
+    useEffect(async ()=>{
+        const userRecord =await  getDocs(query(collection(firestore,"users"),where("username","==",userName)));
+        userRecord.forEach(doc=>{
+            setuid(doc.data().uid);
+            console.log("userrecord-> ",doc.data().uid)
+        })
+    },[])
+    
 
     useEffect(() => {
         const fetchAlerts = async () => {
             try {
                 console.log("Fetching alerts for user:", userName);
 
+                
+                
+                
                 const postsRef = collection(firestore, "posts");
-                const qu = query(postsRef, where("createdBy", "==", JSON.parse(localStorage.getItem("user-info")).uid));
+                const qu = query(postsRef, where("createdBy", "==", uid));
+
                 const querySnapshot = await getDocs(qu);
 
                 let newAlerts = [];
@@ -41,6 +52,7 @@ const AlertsPage = () => {
 
                     // 🚨 Negative Comment Alert
                     if (Array.isArray(post.comments)) {
+                        console.log("posts -> ",post);
                         post.comments.forEach(comment => {
                             const commentText = comment.comment.toLowerCase();
                             const negativeWords = ["bad", "worst", "hate", "terrible", "awful", "trash", "stupid", "idiot"];
@@ -85,9 +97,13 @@ const AlertsPage = () => {
 
                 // Add New Follower Alert
                 const followersRef = collection(firestore, "followers");
-                const q = query(followersRef, where("followedUser", "==", userName));
+                const q = query(followersRef, where("followedUser", "==", uid));
                 const followerSnapshot = await getDocs(q);
-
+                
+                followerSnapshot.forEach(data=>{
+                    console.log(doc);
+                });
+                // console.log(followerSnapshot);
                 followerSnapshot.forEach(doc => {
                     const followerData = doc.data();
                     if (followerData.followedUser === userName && !followerData.alerted) {
@@ -106,6 +122,8 @@ const AlertsPage = () => {
                 // Sorting alerts based on priority
                 newAlerts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
+                console.log(newAlerts);
+
                 setAlerts(newAlerts);
             } catch (error) {
                 console.error("Error fetching alerts:", error);
@@ -113,11 +131,10 @@ const AlertsPage = () => {
         };
 
         fetchAlerts();
-    }, []);
+    }, [uid,]);
 
     return (
         <Box p={5}>
-            <Alerts alertCount={alerts.length} /> {/* Pass the alert count here */}
             <Text fontSize="2xl" fontWeight="bold" mb={4}>Alerts</Text>
             <VStack align="start" spacing={3} p={3} bg="gray.800" borderRadius={6}>
                 {alerts.length > 0 ? (
@@ -135,6 +152,7 @@ const AlertsPage = () => {
                                 {alert.message}
                             </Text>
                         </RouterLink>
+
                     ))
                 ) : (
                     <Text fontSize="md" color="gray.400">No new alerts</Text>

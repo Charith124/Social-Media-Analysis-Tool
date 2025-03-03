@@ -1,8 +1,8 @@
-import { Tooltip, Box, Link } from "@chakra-ui/react";
+import { Tooltip, Box, Link, Badge } from "@chakra-ui/react";
 import { IoMdNotifications } from "react-icons/io";
 import { Link as RouterLink } from "react-router-dom";
 
-const Alerts = () => {
+const Alerts = ({ alertCount }) => {
     return (
         <Tooltip hasArrow label={"Alerts & Notifications"} placement="right" ml={1} openDelay={500}>
             <Box>
@@ -19,7 +19,12 @@ const Alerts = () => {
                     justifyContent={{ base: "center", md: "flex-start" }}
                 >
                     <IoMdNotifications size={25} />
-                    <Box display={{ base: "none", md: "block" }}>Alerts</Box>
+                    <Box display={{ base: "none", md: "block" }}>Alerts & Notifications</Box>
+                    {alertCount > 0 && (
+                        <Badge colorScheme="red" ml={2}>
+                            {alertCount}
+                        </Badge>
+                    )}
                 </Link>
             </Box>
         </Tooltip>
