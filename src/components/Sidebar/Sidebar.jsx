@@ -2,7 +2,7 @@ import { Box, Button, Flex, Link, Tooltip, Icon, Image } from "@chakra-ui/react"
 import { Link as RouterLink } from "react-router-dom";
 import { InstagramLogo, InstagramMobileLogo } from "../../assets/constants";
 import { BiLogOut } from "react-icons/bi";
-import { FaChartLine } from "react-icons/fa"; // Imported FaChartLine
+import { FaChartLine, FaSmile } from "react-icons/fa"; // Imported FaChartLine
 import useLogout from "../../hooks/useLogout";
 import SidebarItems from "./SidebarItems";
 
@@ -51,10 +51,23 @@ const Sidebar = () => {
           p={2}
           borderRadius={6}
           _hover={{ bg: "whiteAlpha.200" }}
-          mt={4} // Added margin-top for spacing
+          mt={0} // Added margin-top for spacing
         >
           <Icon as={FaChartLine} mr={4} /> {/* Icon for Competitor Analysis */}
           Competitor Analysis
+        </Link>
+        <Link
+          to="/sentimentanalysis" // Navigate to Sentiment Analysis page
+          as={RouterLink}
+          display="flex"
+          alignItems="center"
+          p={2}
+          borderRadius={6}
+          _hover={{ bg: "whiteAlpha.200" }}
+          mt={0} // Added margin-top for spacing
+        >
+          <Icon as={FaSmile} mr={4} /> {/* Icon for Competitor Analysis */}
+          Sentiment Analysis
         </Link>
 
         {/* LOGOUT */}
