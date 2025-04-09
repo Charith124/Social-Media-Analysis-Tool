@@ -10,6 +10,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/firebase.js";
 import CompetitorAnalysis from "./pages/competitoranalysis/CompetitorAnalysis.jsx"; // Default import
 import SentimentAnalysis from "./pages/sentimentanalysis/SentimentAnalysis.jsx";
+import MultiBrandManagement from "./pages/multibrandmanagement/MultiBrandManagement.jsx";
+
 
 function App() {
   const [authUser] = useAuthState(auth);
@@ -25,6 +27,7 @@ function App() {
 				<Route path='/post/:postId' element={<PostPage />} /> {/* Added this route */}
         		<Route path="/competitoranalysis" element={<CompetitorAnalysis />} />
 				<Route path="/sentimentanalysis" element={<SentimentAnalysis />} /> {/* Added this route */}
+				<Route path="/multibrandmanagement" element={<MultiBrandManagement />} />
 			</Routes>
 		</PageLayout>
 	);
